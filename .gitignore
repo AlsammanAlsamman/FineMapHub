@@ -1,0 +1,175 @@
+# Ignore everything by default
+*
+
+# But keep these specific files
+!.gitignore
+!steps.sh
+!submit.sh
+!test_loci_detection.sh
+!README.md
+
+# Keep these directories and their contents
+!utils/
+!utils/**
+!scripts/
+!scripts/**
+!rules/
+!rules/**
+!configs/
+!configs/**
+
+# But ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Explicitly ignore these large directories to speed up git operations
+results/
+logs/
+inputs/
+outputs/
+codesweuse/
+prompts/
+importanf4FineMap/
+.snakemake/
+logs/
+*.log
+*.out
+*.err
+slurm-*.out
+
+# Results and intermediate files
+results/
+outputs/
+temp/
+tmp/
+scratch/
+
+# Large genomic data files (keep structure, ignore data)
+*.bed
+*.bim
+*.fam
+*.vcf
+*.vcf.gz
+*.bcf
+*.bgen
+*.pgen
+*.pvar
+*.psam
+*.tbi
+*.csi
+*.gz.tbi
+*.ld
+*.frq
+*.nosex
+
+# PLINK output files
+*.hh
+*.log
+*.nof
+*.ped
+*.map
+
+# FINEMAP specific
+*.z
+*.snp
+*.config
+*.cred
+*.master
+*_pval_filtered.loci.tsv
+*_gwas_snps.txt
+*_filtered.loci.tsv
+*_reordered_with_maf.loci.tsv
+*_maf_validation.tsv
+*_ldmatrix.*
+*_formatted.ld
+*_gwas_snps_only.*
+*_qc.*
+
+# SuSiE output
+*.susie.rds
+*.susie.tsv
+
+# Summary statistics (optional - uncomment if you want to track these)
+# *.tsv
+# *.txt
+# *.csv
+
+# Plots and figures
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.svg
+*.tiff
+
+# Excel files
+*.xlsx
+*.xls
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.bz2
+*.7z
+
+# OS specific
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.directory
+
+# IDE
+.vscode/
+.idea/
+*.iml
+.Rproj.user/
+
+# Backup files
+*.bak
+*.backup
+*~
+*.orig
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Temporary R scripts
+filter_by_pvalue.R
+reorder_snps_with_maf.R
+create_ld_matrix.R
+validate_z_file.R
+
+# Documentation builds
+docs/_build/
+site/
+
+# Environment files with secrets
+.env
+.env.local
+secrets.yaml
+credentials.yaml
+
+# Keep empty directories
+!.gitkeep
+
+# But track important configuration and script files
+!configs/
+!scripts/
+!rules/
+!utils/
+!*.smk
+!*.sh
+!*.py
+!*.R
+!*.yaml
+!*.yml
+!*.md
+*.txt
+*.log
+.snakemake/
+codesweuse/

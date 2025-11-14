@@ -1,0 +1,157 @@
+# Analysis configuration and paths
+project_name: "finemapping analysis of Hispanic populations"
+version: "0.1.0"
+results_dir: "results"  # Absolute path to results directory
+
+# Reference files for harmonization
+harmonization:
+  ref_fasta: "/s/nath-lab/alsamman/__Data__/HarmonizingRef/human_g1k_v37.fasta"
+  ref_vcf: "/s/nath-lab/alsamman/__Data__/HarmonizingRef/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5c.20130502.sites.vcf.gz"
+
+# Population reference panels
+ref_panel:
+  EAS: "/s/nath-lab/alsamman/__Data__/1000GenomeData_phase3_2013_PEL/plinkformat/EAS"
+  AMR: "/s/nath-lab/alsamman/__Data__/1000GenomeData_phase3_2013_PEL/plinkformat/AMR"
+  EUR: "/s/nath-lab/alsamman/__Data__/1000GenomeData_phase3_2013_PEL/plinkformat/EUR"
+
+
+# GWAS datasets
+gwastables:
+  - name: "chi"
+    sample_size: 12653
+    case: 4222
+    control: 8431
+    gwas_table: "/s/nath-lab/alsamman/__Data__/DataCollections4info/CHI.tsv"
+  - name: "euro"
+    sample_size: 10995
+    case: 4036
+    control: 6959
+    gwas_table: "/s/nath-lab/alsamman/__Data__/DataCollections4info/EURstdrCleanBJ.tsv"
+  - name: "hisp"
+    sample_size: 8519
+    case: 3018
+    control: 5501
+    gwas_table: "/s/nath-lab/alsamman/__Data__/DataCollections4info/Hisp.tsv"
+  - name: "hisp_euro"
+    sample_size: 25217
+    case: 9126
+    control: 16091
+    gwas_table: "/s/nath-lab/alsamman/__Data__/DataCollections4info/HispEUR.tsv"
+  - name: "hisp_chi"
+    sample_size: 21172
+    case: 7240
+    control: 13932
+    gwas_table: "/s/nath-lab/alsamman/__Data__/DataCollections4info/HispCHI.tsv"
+  - name: "hisp_euro_chi"
+    sample_size: 34598
+    case: 12183
+    control: 22415
+    gwas_table: "/s/nath-lab/alsamman/__Data__/DataCollections4info/HispEURCHI.tsv"
+
+
+# Execution settings
+max_parallel_jobs: 4
+
+# Analysis targets
+target_analysis:
+  # hisp_analysis_amr:
+  #   gwas_table: hisp
+  #   snplist: "inputs/hisp.txt"
+  #   population: AMR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # euro_analysis_eur:
+  #   gwas_table: euro
+  #   snplist: "inputs/euro.txt"
+  #   population: EUR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # chi_analysis_eas:
+  #   gwas_table: chi
+  #   snplist: "inputs/chi.txt"
+  #   population: EAS
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_analysis_eur:
+  #   gwas_table: hisp_euro
+  #   snplist: "inputs/hispeuro.txt"
+  #   population: EUR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_chi_analysis_amr:
+  #   gwas_table: hisp_chi
+  #   snplist: "inputs/hispchi.txt"
+  #   population: AMR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_chi_analysis_eur:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/hispeurochi.txt"
+  #   population: EUR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_chi_analysis_amr:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/hispeurochi.txt"
+  #   population: AMR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_chi_analysis_eas:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/hispeurochi.txt"
+  #   population: EAS
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+
+  # hisp_euro_chi_analysis_eur:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/hispeurochi_96.txt"
+  #   population: EUR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_chi_analysis_amr:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/hispeurochi_96.txt"
+  #   population: AMR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_chi_analysis_eas:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/hispeurochi_96.txt"
+  #   population: EAS
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+
+  euro_analysis_eur_83:
+    gwas_table: euro
+    snplist: "inputs/LOC_83.txt"
+    population: EUR
+    region: 1000000
+    type: ["susieR", "finemap", "cojo"]
+  chi_analysis_eas_83:
+    gwas_table: chi
+    snplist: "inputs/LOC_83.txt"
+    population: EAS
+    region: 1000000
+    type: ["susieR", "finemap", "cojo"]
+  hisp_analysis_amr_83:
+    gwas_table: hisp
+    snplist: "inputs/LOC_83.txt"
+    population: AMR
+    region: 1000000
+    type: ["susieR", "finemap", "cojo"]
+
+
+
+  
+#################################
+# Default resources
+default_resources:
+  mem_mb: 32000
+  cores: 2
+  time: "00:30:00"
+
+
+# Column mappings for GWAS data standardization
+# Format: default_column_name,possible_name1;possible_name2;possible_name3
+column_mappings: "CHR,chrom;chr;chromosome|POS,pos;position;bp|SNP,snp;rsid;variant_id|EA,ea;effectallele;effect_allele;a1|NEA,OA;otherallele;other_allele;oa;other_allele;a2;ref|EAF,eaf;effect_allele_freq;frq|BETA,beta;effect|SE,se;standard_error|P,PVAL;pval;p;p_value;pvalue"
