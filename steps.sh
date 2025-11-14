@@ -39,7 +39,7 @@ set -euo pipefail
 ./submit.sh --snakefile rules/extract_loci.smk --cores 1 results/04_loci/hisp_euro_chi_analysis_eur/extract_loci.done
 
 # Step 4 (All): Loci extraction for all target analyses
-./submit.sh --snakefile rules/extract_loci.smk --cores 4 results/04_loci/extract_loci_all.done
+./submit.sh --snakefile rules/extract_loci.smk --cores 4 results/04_loci/extract_loci_all.done --jobs 10
 
 # Step 5: Reference data extraction for target analysis
 ./submit.sh --snakefile rules/extract_reference_data.smk --cores 1 results/04_loci/hisp_euro_chi_analysis_eur/extract_reference_data.done
@@ -52,7 +52,3 @@ set -euo pipefail
 
 # Step 5.5 (All): Reference matching for all target analyses
 ./submit.sh --snakefile rules/reference_match.smk --cores 4 --jobs 6 results/04_loci/reference_match_all.done
-
-
-
-
