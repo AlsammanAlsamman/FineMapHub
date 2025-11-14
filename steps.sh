@@ -53,25 +53,6 @@ set -euo pipefail
 # Step 5.5 (All): Reference matching for all target analyses
 ./submit.sh --snakefile rules/reference_match.smk --cores 4 --jobs 6 results/04_loci/reference_match_all.done
 
-# Step 6: FINEMAP analysis for target analysis (only analyses with 'finemap' type)
-./submit.sh --snakefile rules/finemap.smk --cores 4 results/05_finemapping/hisp_euro_chi_analysis_eur/finemap/finemap.done
-
-# Step 6 (All): FINEMAP analysis for all target analyses with finemap type
-./submit.sh --snakefile rules/finemap.smk --cores 8 --jobs 6 results/05_finemapping/finemap_all.done
 
 
 
-
-
-
-# # Step 4 (All): Loci extraction for all target analyses
-# ./submit.sh --snakefile rules/extract_loci.smk --cores 4 --jobs 6 results/04_loci/extract_loci_all.done
-
-# # Step 5 (All): Reference data extraction for all target analyses
-# ./submit.sh --snakefile rules/extract_reference_data.smk --cores 4 --jobs 6 results/04_loci/extract_reference_data_all.done
-
-# # Step 5.5 (All): Reference matching for all target analyses
-# ./submit.sh --snakefile rules/reference_match.smk --cores 4 --jobs 6 results/04_loci/reference_match_all.done
-
-# Step 6 (All): FINEMAP analysis for all target analyses with finemap type
-./submit.sh --snakefile rules/finemap.smk --cores 8 --jobs 6 results/05_finemapping/finemap_all.done
