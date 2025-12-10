@@ -58,64 +58,65 @@ loci_info_file: "inputs/LOCI_info.txt"
 target_analysis:
   hisp_analysis_amr:
     gwas_table: hisp
-    snplist: "inputs/OurHispanic112.txt"
+    snplist: "inputs/Hisp_FUMA.txt"
     population: AMR
     region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  euro_analysis_eur:
-    gwas_table: euro
-    snplist: "inputs/OurHispanic112.txt"
-    population: EUR
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  chi_analysis_eas:
-    gwas_table: chi
-    snplist: "inputs/OurHispanic112.txt"
-    population: EAS
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  hisp_euro_analysis_eur:
-    gwas_table: hisp_euro
-    snplist: "inputs/OurHispanic112.txt"
-    population: EUR
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  hisp_euro_analysis_amr:
-    gwas_table: hisp_euro
-    snplist: "inputs/OurHispanic112.txt"
-    population: AMR
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  hisp_chi_analysis_amr:
-    gwas_table: hisp_chi
-    snplist: "inputs/OurHispanic112.txt"
-    population: AMR
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  hisp_chi_analysis_eas:
-    gwas_table: hisp_chi
-    snplist: "inputs/OurHispanic112.txt"
-    population: EAS
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  hisp_euro_chi_analysis_eur:
-    gwas_table: hisp_euro_chi
-    snplist: "inputs/OurHispanic112.txt"
-    population: EUR
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  hisp_euro_chi_analysis_amr:
-    gwas_table: hisp_euro_chi
-    snplist: "inputs/OurHispanic112.txt"
-    population: AMR
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
-  hisp_euro_chi_analysis_eas:
-    gwas_table: hisp_euro_chi
-    snplist: "inputs/OurHispanic112.txt"
-    population: EAS
-    region: 1000000
-    type: ["susieR", "finemap", "cojo"]
+    type: ["cojo"]
+#    type: ["susieR", "finemap", "cojo"]
+  # euro_analysis_eur:
+  #   gwas_table: euro
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: EUR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # chi_analysis_eas:
+  #   gwas_table: chi
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: EAS
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_analysis_eur:
+  #   gwas_table: hisp_euro
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: EUR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_analysis_amr:
+  #   gwas_table: hisp_euro
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: AMR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_chi_analysis_amr:
+  #   gwas_table: hisp_chi
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: AMR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_chi_analysis_eas:
+  #   gwas_table: hisp_chi
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: EAS
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_chi_analysis_eur:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: EUR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_chi_analysis_amr:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: AMR
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
+  # hisp_euro_chi_analysis_eas:
+  #   gwas_table: hisp_euro_chi
+  #   snplist: "inputs/OurHispanic112.txt"
+  #   population: EAS
+  #   region: 1000000
+  #   type: ["susieR", "finemap", "cojo"]
 
 
 

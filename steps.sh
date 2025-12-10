@@ -73,3 +73,22 @@ set -euo pipefail
 
 # Step 8: COJO Excel Report - Generate summary report of COJO results
 ./submit.sh --snakefile rules/cojo_excel_report.smk --cores 1 results/05_cojo/cojo_excel_report.done
+
+
+##################### for hispanic snplist only #####################
+
+
+# Step 4 (All): Loci extraction for all target analyses
+./submit.sh --snakefile rules/extract_loci.smk --cores 4 results/04_loci/extract_loci_all.done --jobs 10
+
+
+# Step 5 (All): Reference data extraction for all target analyses
+./submit.sh --snakefile rules/extract_reference_data.smk --cores 4 --jobs 6 results/04_loci/extract_reference_data_all.done
+
+
+# Step 5.5 (All): Reference matching for all target analyses
+./submit.sh --snakefile rules/reference_match.smk --cores 4 --jobs 10 results/04_loci/reference_match_all.done
+
+
+# Step 6 (All): COJO conditional analysis for all target analyses with "cojo" in type
+./submit.sh --snakefile rules/cojo_analysis.smk --cores 4 --jobs 10 results/05_cojo/cojo_analysis_all.done

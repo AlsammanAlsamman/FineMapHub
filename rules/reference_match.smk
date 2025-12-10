@@ -84,7 +84,7 @@ rule reference_match:
         
         # Use shell globbing instead of find
         shopt -s nullglob 2>/dev/null || echo "Warning: nullglob not supported"
-        LOCUS_DIRS=("$LOCI_DIR"/LOC_* "$LOCI_DIR"/newLOC_*)
+        LOCUS_DIRS=("$LOCI_DIR"/LOC_* "$LOCI_DIR"/newLOC_* "$LOCI_DIR"/FUMA_*)
         shopt -u nullglob 2>/dev/null || echo "Warning: nullglob disable not supported"
         
         echo "Found locus directories: ${{#LOCUS_DIRS[@]}} items"

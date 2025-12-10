@@ -112,18 +112,25 @@ echo "Using GCTA: ${GCTA_PATH}"
 echo "Using PLINK: ${PLINK_PATH}"
 echo "============================================================"
 
-# Find all LOC_* directories
+# Find all supported locus directories (matches extract/reference rules)
 LOCI=()
-for dir in "${LOCI_DIR}"/LOC_*; do
+declare -A LOCI_SEEN
+shopt -s nullglob
+for dir in "${LOCI_DIR}"/LOC_* "${LOCI_DIR}"/FUMA_*; do
     [ -d "$dir" ] || continue
     locus_name=$(basename "$dir")
-    
+
     # Skip merged loci (containing "-") and newLOC directories
     [[ "$locus_name" == *"-"* ]] && continue
     [[ "$locus_name" == newLOC* ]] && continue
-    
-    LOCI+=("$locus_name")
+
+    # Deduplicate in case multiple patterns match the same directory
+    if [[ -z "${LOCI_SEEN[$locus_name]}" ]]; then
+        LOCI+=("$locus_name")
+        LOCI_SEEN[$locus_name]=1
+    fi
 done
+shopt -u nullglob
 
 NUM_LOCI=${#LOCI[@]}
 echo "Found ${NUM_LOCI} loci to process"
