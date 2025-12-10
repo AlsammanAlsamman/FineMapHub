@@ -51,6 +51,8 @@ gwastables:
 
 # Execution settings
 max_parallel_jobs: 4
+significance_threshold: 5e-8
+loci_info_file: "inputs/LOCI_info.txt"
 
 # Analysis targets
 target_analysis:

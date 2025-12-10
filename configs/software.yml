@@ -53,3 +53,11 @@ annovar:
     memory: "--memory 32000"
     threads: "--threads 2"
     annovar_db_dir: "/s/nath-lab/alsamman/__Data__/HarmonizingRef/annovar_db"
+
+gcta:
+  module: "gcta"
+  version: "1.94.1"
+  params:
+    maf: "0.01"
+  # COJO analysis settings
+  cojo_max_iterations: 20

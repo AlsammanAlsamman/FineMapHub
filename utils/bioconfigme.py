@@ -109,6 +109,30 @@ def get_software_params(tool_name: str) -> Dict[str, Any]:
     return tool_config.get("params", {})
 
 
+def get_software_value(path: Sequence[str], *, required: bool = True, default: Optional[Any] = None) -> Any:
+    """Get a value from software configuration using dot notation path."""
+    config = _get_config()
+    
+    # Navigate through the path
+    value = config["software"]
+    path_str = ".".join(path)
+    
+    try:
+        for key in path:
+            if isinstance(value, dict) and key in value:
+                value = value[key]
+            else:
+                if required:
+                    raise ConfigError(f"Configuration key '{path_str}' not found in software.yml")
+                return default
+    except (TypeError, KeyError):
+        if required:
+            raise ConfigError(f"Configuration key '{path_str}' not found in software.yml")
+        return default
+    
+    return value
+
+
 def get_default_resources() -> Dict[str, Any]:
     """Get default resource requirements."""
     try:

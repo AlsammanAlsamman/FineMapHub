@@ -51,4 +51,25 @@ set -euo pipefail
 ./submit.sh --snakefile rules/reference_match.smk --cores 2 results/04_loci/hisp_euro_chi_analysis_eur/reference_match.done
 
 # Step 5.5 (All): Reference matching for all target analyses
-./submit.sh --snakefile rules/reference_match.smk --cores 4 --jobs 6 results/04_loci/reference_match_all.done
+./submit.sh --snakefile rules/reference_match.smk --cores 4 --jobs 10 results/04_loci/reference_match_all.done
+
+# Step 6: COJO conditional analysis for target analysis
+./submit.sh --snakefile rules/cojo_analysis.smk --cores 2 results/05_cojo/hisp_euro_chi_analysis_eur/cojo_analysis.done
+
+# Step 6 (All): COJO conditional analysis for all target analyses with "cojo" in type
+./submit.sh --snakefile rules/cojo_analysis.smk --cores 4 --jobs 10 results/05_cojo/cojo_analysis_all.done
+
+
+
+
+
+
+
+# Step 7: FINEMAP fine-mapping analysis for target analysis
+./submit.sh --snakefile rules/finemap_analysis.smk --cores 2 results/05_finemap/hisp_euro_chi_analysis_eur/finemap_analysis.done
+
+# Step 7 (All): FINEMAP fine-mapping analysis for all target analyses with "finemap" in type
+./submit.sh --snakefile rules/finemap_analysis.smk --cores 4 --jobs 10 results/05_finemap/finemap_analysis_all.done
+
+# Step 8: COJO Excel Report - Generate summary report of COJO results
+./submit.sh --snakefile rules/cojo_excel_report.smk --cores 1 results/05_cojo/cojo_excel_report.done
