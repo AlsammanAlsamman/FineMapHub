@@ -181,8 +181,18 @@ def generate_freq_file(bfile_prefix, output_dir, plink_path):
         print(f"Warning: PLINK frequency generation failed: {e}")
         return None
 
-def run_gcta_cojo(bfile_prefix, ma_file, cond_snplist, output_prefix, chrom, gcta_path, log_file):
-    """Run GCTA-COJO conditional analysis"""
+def run_gcta_cojo(
+    bfile_prefix,
+    ma_file,
+    cond_snplist,
+    output_prefix,
+    chrom,
+    gcta_path,
+    log_file,
+    *,
+    cojo_collinear=0.99,
+):
+    """Run GCTA-COJO conditional analysis with optional collinearity guard."""
     cmd = [
         gcta_path,
         '--bfile', bfile_prefix,
@@ -190,8 +200,11 @@ def run_gcta_cojo(bfile_prefix, ma_file, cond_snplist, output_prefix, chrom, gct
         '--maf', '0.01',
         '--cojo-file', ma_file,
         '--cojo-cond', cond_snplist,
-        '--out', output_prefix
+        '--out', output_prefix,
     ]
+
+    if cojo_collinear is not None:
+        cmd.extend(['--cojo-collinear', str(cojo_collinear)])
     
     print(f"Running GCTA-COJO: {' '.join(cmd)}")
     

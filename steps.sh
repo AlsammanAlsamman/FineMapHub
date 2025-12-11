@@ -67,6 +67,9 @@ set -euo pipefail
 
 # Test: scripts/submit_cojo_manhattan_plots.sh hisp_analysis_amr
 
+# Experiment: regional dependency test for LOC_100 (hisp_euro_analysis_eur)
+# scripts/run_region_dependency_experiment.sh
+
 
 
 

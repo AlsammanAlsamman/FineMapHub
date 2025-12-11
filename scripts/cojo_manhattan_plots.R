@@ -3,6 +3,7 @@
 suppressPackageStartupMessages({
   library(data.table)
   library(ggplot2)
+  library(ggrepel)
   library(patchwork)
 })
 
@@ -36,15 +37,15 @@ save_plot_pdf <- function(plot, file_path) {
   ggsave(filename = file_path, plot = plot, width = 10, height = 5, device = "pdf")
 }
 
-create_placeholder_plot <- function(message_text, x_range = NULL, line_values = NULL, line_colors = NULL) {
-  max_y <- if (is.null(line_values)) 1 else max(c(line_values, 1), na.rm = TRUE) + 1
+create_placeholder_plot <- function(message_text, x_range = NULL, line_values = NULL, line_colors = NULL, y_label = expression(-log[10](p))) {
+  max_y <- if (is.null(line_values)) 1 else max(c(line_values, 1), na.rm = TRUE) + 0.5
 
   plot_obj <- ggplot() +
-    annotate("text", x = mean(if (is.null(x_range)) c(0, 1) else x_range), y = max_y * 0.6,
-             label = message_text, size = 4) +
+    annotate("text", x = mean(if (is.null(x_range)) c(0, 1) else x_range), y = max_y * 0.65,
+             label = message_text, size = 3, color = "#525252") +
     ylim(0, max_y) +
-    labs(x = "Genomic position", y = "-log10(p)") +
-    theme_minimal()
+    labs(x = "Genomic position", y = y_label) +
+    theme_classic()
 
   if (!is.null(x_range) && length(x_range) == 2 && all(is.finite(x_range))) {
     plot_obj <- plot_obj +
@@ -57,9 +58,16 @@ create_placeholder_plot <- function(message_text, x_range = NULL, line_values = 
     for (i in seq_along(line_values)) {
       color_i <- if (!is.null(line_colors) && length(line_colors) >= i) line_colors[i] else "#444444"
       plot_obj <- plot_obj +
-        geom_hline(yintercept = line_values[i], color = color_i, linetype = "dashed")
+        geom_hline(yintercept = line_values[i], color = color_i, linetype = "dashed", linewidth = 0.3)
     }
   }
+
+  plot_obj <- plot_obj +
+    theme(
+      legend.position = "none",
+      axis.title.x = element_blank(),
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 10)
+    )
 
   plot_obj
 }
@@ -127,16 +135,16 @@ build_gene_plot <- function(chr_value, region_start, region_end) {
   region_genes <- genes_dt[chr_numeric == chr_value & end >= region_start & start <= region_end]
 
   base_plot <- ggplot() +
-    scale_x_continuous(limits = c(region_start, region_end), expand = c(0, 0)) +
+    scale_x_continuous(limits = c(region_start, region_end), expand = expansion(mult = c(0.01, 0.01))) +
     labs(x = "Genomic position", y = NULL) +
-    theme_minimal() +
+    theme_classic() +
     theme(
       axis.title.y = element_blank(),
       axis.text.y = element_blank(),
       axis.ticks.y = element_blank(),
-      panel.grid.major.y = element_blank(),
-      panel.grid.minor = element_blank(),
-      plot.margin = margin(t = 2, r = 10, b = 2, l = 10)
+      axis.line.y = element_blank(),
+      plot.margin = margin(t = 2, r = 10, b = 2, l = 10),
+      legend.position = "none"
     )
 
   if (nrow(region_genes) == 0) {
@@ -146,18 +154,19 @@ build_gene_plot <- function(chr_value, region_start, region_end) {
   }
 
   setorder(region_genes, start, end)
-  region_genes[, level := 0L]
+  region_genes[, `:=`(lane = 0L, xmin = start, xmax = end)]
+  step_height <- 1.0
   track_ends <- numeric()
   for (i in seq_len(nrow(region_genes))) {
     placed <- FALSE
     if (length(track_ends) == 0) {
       track_ends <- c(region_genes$end[i])
-      region_genes$level[i] <- 1L
+      region_genes$lane[i] <- 1L
       next
     }
     for (track_index in seq_along(track_ends)) {
       if (region_genes$start[i] > (track_ends[track_index] + 1e3)) {
-        region_genes$level[i] <- track_index
+        region_genes$lane[i] <- track_index
         track_ends[track_index] <- region_genes$end[i]
         placed <- TRUE
         break
@@ -165,38 +174,45 @@ build_gene_plot <- function(chr_value, region_start, region_end) {
     }
     if (!placed) {
       track_ends <- c(track_ends, region_genes$end[i])
-      region_genes$level[i] <- length(track_ends)
+      region_genes$lane[i] <- length(track_ends)
     }
   }
 
+  max_lane <- max(region_genes$lane)
+  region_genes[, y_center := lane * step_height]
   region_genes[, mid := (start + end) / 2]
-
-  max_level <- max(region_genes$level)
 
   base_plot +
     geom_segment(
       data = region_genes,
-      aes(x = start, xend = end, y = level, yend = level,
-          color = strand),
-      lineend = "round",
-      linewidth = 0.6,
-      show.legend = FALSE
+      aes(x = start, xend = end, y = y_center, yend = y_center, color = strand),
+      lineend = "butt",
+      linewidth = 0.5
     ) +
     geom_point(
       data = region_genes,
-      aes(x = start, y = level),
-      size = 1,
+      aes(x = start, y = y_center),
+      size = 0.8,
       color = "#636363"
     ) +
-    geom_text(
+    geom_text_repel(
       data = region_genes,
-      aes(x = mid, y = level + 0.25, label = symbol),
+      aes(x = mid, y = y_center, label = symbol),
+      angle = 90,
       size = 2,
-      fontface = "bold",
-      color = "#1a1a1a"
+      fontface = "plain",
+      color = "#1a1a1a",
+      direction = "y",
+      max.overlaps = Inf,
+      box.padding = 0.3,
+      point.padding = 0.1,
+      segment.color = "#bdbdbd",
+      segment.size = 0.1,
+      min.segment.length = 0,
+      nudge_y = 0.25
     ) +
     scale_color_manual(values = c("+" = "#2C7BB6", "-" = "#D7191C"), na.translate = TRUE) +
-    scale_y_continuous(limits = c(0.5, max_level + 0.75), expand = expansion(mult = c(0.05, 0.15)))
+    scale_y_continuous(limits = c(0, max_lane * step_height + 0.5), expand = expansion(mult = c(0.05, 0.15)))
 }
 
 locus_dirs <- list.dirs(cojo_dir, full.names = TRUE, recursive = FALSE)
@@ -293,6 +309,24 @@ for (locus_path in sort(locus_dirs)) {
     combined_dt[, p := coerce_numeric(p)]
     combined_dt[, pC := coerce_numeric(pC)]
 
+    conditioned_snps <- character()
+    # Collect SNP identifiers that were conditioned out in the COJO iteration
+    snp_cols_combined <- intersect(c("SNP", "SNPID", "rsid", "RSID", "ID"), names(combined_dt))
+    if (length(snp_cols_combined) > 0) {
+      for (col in snp_cols_combined) {
+        snp_vals <- combined_dt[source == "given" & !is.na(get(col)), unique(as.character(get(col)))]
+        if (length(snp_vals) > 0) {
+          conditioned_snps <- snp_vals
+          break
+        }
+      }
+    }
+    conditioned_label <- if (length(conditioned_snps) > 0) {
+      paste("Conditioned SNPs:", paste(conditioned_snps, collapse = ", "))
+    } else {
+      "Conditioned SNPs: none"
+    }
+
     after_dt <- combined_dt[is.finite(bp) & is.finite(pC) & pC > 0 & pC <= 1, .(pos = bp, logp = -log10(pC))]
 
     chr_candidates <- unique(coerce_numeric(gwas_dt$CHR))
@@ -322,37 +356,98 @@ for (locus_path in sort(locus_dirs)) {
     output_iteration_dir <- file.path(output_dir, locus_name, sprintf("iteration_%s", iter_id))
     dir.create(output_iteration_dir, recursive = TRUE, showWarnings = FALSE)
 
+    before_ymax <- suppressWarnings(max(c(before_dt$logp, line_values), na.rm = TRUE))
+    if (!is.finite(before_ymax)) {
+      before_ymax <- max(c(line_values, 1), na.rm = TRUE)
+    }
+    conditioned_positions <- data.table()
+    # Locate conditioned SNPs within the pre-conditioning GWAS data for highlighting
+    if (length(conditioned_snps) > 0) {
+      snp_cols_gwas <- intersect(c("SNPID", "SNP", "ID", "rsid", "RSID"), names(gwas_dt))
+      for (col in snp_cols_gwas) {
+        positions_dt <- gwas_dt[get(col) %in% conditioned_snps & is.finite(POS), .(pos = POS, snp = as.character(get(col)))]
+        if (nrow(positions_dt) > 0) {
+          conditioned_positions <- unique(positions_dt, by = c("pos", "snp"))
+          break
+        }
+      }
+    }
+
+    highlight_points <- before_dt[0]
+    label_data <- data.table()
+    if (nrow(conditioned_positions) > 0) {
+      highlight_points <- before_dt[pos %in% conditioned_positions$pos]
+      label_data <- merge(conditioned_positions, before_dt, by = "pos", all.x = TRUE, allow.cartesian = TRUE)
+      label_data <- label_data[is.finite(logp)]
+    }
+
     before_plot <- ggplot(before_dt, aes(x = pos, y = logp)) +
-      geom_point(color = "#2C7BB6", size = 0.9) +
-      geom_hline(yintercept = genome_line, color = "#2C7BB6", linetype = "dashed") +
-      geom_hline(yintercept = suggestive_line, color = "#D7191C", linetype = "dashed") +
-      labs(title = sprintf("%s: Before COJO (iteration %s)", locus_name, iter_id),
-           x = "Genomic position", y = "-log10(P)") +
-      scale_x_continuous(limits = c(region_start, region_end), expand = c(0.01, 0.01)) +
-      theme_bw()
+      geom_point(color = "#2C7BB6", size = 0.6) +
+      geom_hline(yintercept = genome_line, color = "#2C7BB6", linetype = "dashed", linewidth = 0.3) +
+      geom_hline(yintercept = suggestive_line, color = "#D7191C", linetype = "dashed", linewidth = 0.3) +
+      labs(x = NULL, y = expression("GWAS  " * -log[10](p))) +
+      scale_x_continuous(limits = c(region_start, region_end), expand = expansion(mult = c(0.01, 0.01))) +
+      scale_y_continuous(limits = c(0, before_ymax + 0.5), expand = expansion(mult = c(0.02, 0.05))) +
+      theme_classic() +
+      theme(
+        legend.position = "none",
+        axis.title.x = element_blank(),
+        plot.margin = margin(t = 5, r = 5, b = 5, l = 10)
+      )
+
+    if (nrow(highlight_points) > 0) {
+      before_plot <- before_plot +
+        geom_point(data = highlight_points, color = "#D73027", size = 1.4)
+    }
+
+    if (nrow(label_data) > 0) {
+      before_plot <- before_plot +
+        geom_text_repel(
+          data = label_data,
+          aes(x = pos, y = logp, label = snp),
+          inherit.aes = FALSE,
+          color = "#D73027",
+          angle = 90,
+          size = 1.8,
+          fontface = "bold",
+          min.segment.length = 0,
+          nudge_y = 0.7,
+          direction = "y",
+          box.padding = 0.25,
+          point.padding = 0.05,
+          segment.size = 0.12,
+          segment.color = "#D73027",
+          max.overlaps = Inf
+        )
+    }
 
     if (nrow(after_dt) == 0) {
       warning(sprintf("%s iteration %s: no conditional p-values available; writing placeholder", locus_name, iter_id))
-      after_plot <- create_placeholder_plot("Conditional results not available",
-                                           c(region_start, region_end),
-                                           line_values, line_colors)
+      after_plot <- create_placeholder_plot(
+        "Conditional results not available",
+        c(region_start, region_end),
+        line_values,
+        line_colors,
+        y_label = expression("COJO  " * -log[10](p[C]))
+      )
     } else {
+      after_ymax <- suppressWarnings(max(c(after_dt$logp, line_values), na.rm = TRUE))
+      if (!is.finite(after_ymax)) {
+        after_ymax <- max(c(line_values, 1), na.rm = TRUE)
+      }
       after_plot <- ggplot(after_dt, aes(x = pos, y = logp)) +
-        geom_point(color = "#1A9641", size = 0.9) +
-        geom_hline(yintercept = genome_line, color = "#2C7BB6", linetype = "dashed") +
-        geom_hline(yintercept = suggestive_line, color = "#D7191C", linetype = "dashed") +
-        labs(title = sprintf("%s: After COJO (iteration %s)", locus_name, iter_id),
-             x = "Genomic position", y = "-log10(pC)") +
-        scale_x_continuous(limits = c(region_start, region_end), expand = c(0.01, 0.01)) +
-        theme_bw()
-    }
-
-    conditioned_snps <- combined_dt[source == "given" & !is.na(SNP)]
-    conditioned_snps <- unique(conditioned_snps$SNP)
-    conditioned_label <- if (length(conditioned_snps) > 0) {
-      paste("Conditioned SNPs:", paste(conditioned_snps, collapse = ", "))
-    } else {
-      "Conditioned SNPs: none"
+        geom_point(color = "#1A9641", size = 0.6) +
+        geom_hline(yintercept = genome_line, color = "#2C7BB6", linetype = "dashed", linewidth = 0.3) +
+        geom_hline(yintercept = suggestive_line, color = "#D7191C", linetype = "dashed", linewidth = 0.3) +
+        labs(x = NULL, y = expression("COJO  " * -log[10](p[C]))) +
+        scale_x_continuous(limits = c(region_start, region_end), expand = expansion(mult = c(0.01, 0.01))) +
+        scale_y_continuous(limits = c(0, after_ymax + 0.5), expand = expansion(mult = c(0.02, 0.05))) +
+        theme_classic() +
+        theme(
+          legend.position = "none",
+          axis.title.x = element_blank(),
+          plot.margin = margin(t = 5, r = 5, b = 5, l = 10)
+        )
     }
 
     combined_plot <- (before_plot / before_gene_plot) | (after_plot / after_gene_plot)
