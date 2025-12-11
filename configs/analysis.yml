@@ -14,6 +14,7 @@ ref_panel:
   AMR: "/s/nath-lab/alsamman/__Data__/1000GenomeData_phase3_2013_PEL/plinkformat/AMR"
   EUR: "/s/nath-lab/alsamman/__Data__/1000GenomeData_phase3_2013_PEL/plinkformat/EUR"
 
+genes_loc: "resources/NCBI37.3.gene.loc"
 
 # GWAS datasets
 gwastables:
@@ -56,12 +57,12 @@ loci_info_file: "inputs/LOCI_info.txt"
 
 # Analysis targets
 target_analysis:
-  hisp_analysis_amr:
-    gwas_table: hisp
-    snplist: "inputs/Hisp_FUMA.txt"
-    population: AMR
-    region: 1000000
-    type: ["cojo"]
+  # hisp_analysis_amr:
+  #   gwas_table: hisp
+  #   snplist: "inputs/Hisp_FUMA.txt"
+  #   population: AMR
+  #   region: 1000000
+  #   type: ["cojo"]
 #    type: ["susieR", "finemap", "cojo"]
   # euro_analysis_eur:
   #   gwas_table: euro
@@ -75,12 +76,12 @@ target_analysis:
   #   population: EAS
   #   region: 1000000
   #   type: ["susieR", "finemap", "cojo"]
-  # hisp_euro_analysis_eur:
-  #   gwas_table: hisp_euro
-  #   snplist: "inputs/OurHispanic112.txt"
-  #   population: EUR
-  #   region: 1000000
-  #   type: ["susieR", "finemap", "cojo"]
+  hisp_euro_analysis_eur:
+    gwas_table: hisp_euro
+    snplist: "inputs/HispEUR_FUMA.txt"
+    population: EUR
+    region: 1000000
+    type: ["cojo"]
   # hisp_euro_analysis_amr:
   #   gwas_table: hisp_euro
   #   snplist: "inputs/OurHispanic112.txt"

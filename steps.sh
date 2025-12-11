@@ -59,6 +59,14 @@ set -euo pipefail
 # Step 6 (All): COJO conditional analysis for all target analyses with "cojo" in type
 ./submit.sh --snakefile rules/cojo_analysis.smk --cores 4 --jobs 10 results/05_cojo/cojo_analysis_all.done
 
+# Step 6.1: COJO Manhattan plots for target analysis
+./submit.sh --snakefile rules/cojo_manhattan_plots.smk --cores 2 results/05_cojo/hisp_euro_chi_analysis_eur/plots/manhattan_plots.done
+
+# Step 6.1 (All): COJO Manhattan plots for all target analyses with "cojo" in type
+./submit.sh --snakefile rules/cojo_manhattan_plots.smk --cores 2 --jobs 6 results/05_cojo/cojo_manhattan_plots_all.done
+
+# Test: scripts/submit_cojo_manhattan_plots.sh hisp_analysis_amr
+
 
 
 
