@@ -85,6 +85,12 @@ set -euo pipefail
 # Step 8: COJO Excel Report - Generate summary report of COJO results
 ./submit.sh --snakefile rules/cojo_excel_report.smk --cores 1 results/05_cojo/cojo_excel_report.done
 
+# Step 9: Target Analysis Report - Generate Excel report for specific target analysis
+./submit.sh --snakefile rules/target_analysis_report.smk --cores 2 results/05_cojo/hisp_euro_chi_analysis_eur/hisp_euro_chi_analysis_eur_report.done
+
+# Step 9 (All): Target Analysis Reports - Generate Excel reports for all target analyses with "cojo" in type
+./submit.sh --snakefile rules/target_analysis_report.smk --cores 2 --jobs 6 results/05_cojo/target_analysis_reports_all.done
+
 
 ##################### for hispanic snplist only #####################
 
@@ -103,3 +109,7 @@ set -euo pipefail
 
 # Step 6 (All): COJO conditional analysis for all target analyses with "cojo" in type
 ./submit.sh --snakefile rules/cojo_analysis.smk --cores 4 --jobs 10 results/05_cojo/cojo_analysis_all.done
+
+# Step 9 (All): Target Analysis Reports - Generate Excel reports for all target analyses with "cojo" in type
+./submit.sh --snakefile rules/target_analysis_report.smk --cores 2 --jobs 6 results/05_cojo/target_analysis_reports_all.done
+

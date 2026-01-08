@@ -57,6 +57,15 @@ loci_info_file: "inputs/LOCI_info.txt"
 
 # Analysis targets
 target_analysis:
+  hisp_analysis_amr:
+    gwas_table: hisp
+    snplist: "inputs/Hisp_FUMA.txt"
+    population: AMR
+    region: 1000000
+    type: ["cojo"]
+#   type: ["susieR", "finemap", "cojo"]
+
+
   # hisp_analysis_amr:
   #   gwas_table: hisp
   #   snplist: "inputs/Hisp_FUMA.txt"
@@ -76,12 +85,12 @@ target_analysis:
   #   population: EAS
   #   region: 1000000
   #   type: ["susieR", "finemap", "cojo"]
-  hisp_euro_analysis_eur:
-    gwas_table: hisp_euro
-    snplist: "inputs/HispEUR_FUMA.txt"
-    population: EUR
-    region: 1000000
-    type: ["cojo"]
+  # hisp_euro_analysis_eur:
+  #   gwas_table: hisp_euro
+  #   snplist: "inputs/HispEUR_FUMA.txt"
+  #   population: EUR
+  #   region: 1000000
+  #   type: ["cojo"]
   # hisp_euro_analysis_amr:
   #   gwas_table: hisp_euro
   #   snplist: "inputs/OurHispanic112.txt"
